@@ -13,6 +13,23 @@ class DatabaseWrapper:
 
     def __init__(self, connection):
         self.connection = connection
+
+    def login(self, username, password):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
+        if cursor.rowcount == 1:
+            return True
+        else:
+            return False
+    
+    def register(self,name,email, username, password):
+        cursor = self.connection.cursor()
+        if(self.login(username, password)):
+            return False
+        else:
+            cursor.execute("INSERT INTO users (name, email, username, password) VALUES (%s, %s, %s, %s)", (name, email, username, password))
+            self.connection.commit()
+            return True
     
     def __del__(self):
         self.connection.close()
@@ -30,7 +47,7 @@ class Database(DependencyProvider):
                 host='127.0.0.1',
                 database='cloud_storage',
                 user='root',
-                password=''
+                password='admin'
             )
         except Error as e:
             print("Error while connecting to MySQL using Connection pool ", e)
