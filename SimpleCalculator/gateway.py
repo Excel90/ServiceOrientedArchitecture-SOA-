@@ -11,7 +11,7 @@ class GatewayService:
 
     @http('GET', '/api/prime/<int:number>')
     def prime(self, request, number):
-        result = self.number_rpc.arrprime(number)
+        result = self.number_rpc.prime(number)
         return json.dumps({'result': result})
 
     @http('GET', '/api/prime/palindrome/<int:number>')

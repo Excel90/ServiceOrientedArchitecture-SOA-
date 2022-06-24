@@ -42,9 +42,9 @@ class ServerService:
 
     @http("POST", "/upload")
     def save_file(self, request):
-
+        cookies = request.cookies
         data = request.get_json()
-        file_path = 'Wherehouse' + data['file_path']
+        file_path = 'Wherehouse'+ + data['file_path']
         log_response = {
             'status': '' , 
             'oke': False
@@ -56,7 +56,7 @@ class ServerService:
             os.makedirs(file_path)        
         for file in request.files.items():
             _, file_storage = file
-            file_storage.save(f"Wherehouse/{file_path}'s_Storage/{file_storage.filename}")
+            file_storage.save(f"Wherehouse/{cookies['username']}/{file_path}'s_Storage/{file_storage.filename}")
         return json_dump(log_response)
 
     @http("GET", "/<string:Filename>")
