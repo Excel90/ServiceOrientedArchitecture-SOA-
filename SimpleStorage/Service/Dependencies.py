@@ -1,10 +1,10 @@
-import re
 from unittest import result
 from nameko.extensions import DependencyProvider
 
 import mysql.connector
 from mysql.connector import Error
 from mysql.connector import pooling
+import os
 
 
 class DatabaseWrapper:
@@ -29,6 +29,7 @@ class DatabaseWrapper:
         else:
             cursor.execute("INSERT INTO users (name, email, username, password) VALUES (%s, %s, %s, %s)", (name, email, username, password))
             self.connection.commit()
+            os.mkdir('Wherehouse/'+ username )
             return True
     
     def __del__(self):

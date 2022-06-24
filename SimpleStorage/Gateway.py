@@ -2,7 +2,7 @@ from fileinput import filename
 from hashlib import sha256
 import json
 from urllib import response
-from matplotlib.font_manager import json_dump
+from matplotlib.font_manager import json_dump, json_load
 import requests
 from werkzeug import Response
 from nameko.web.handlers import http
@@ -28,7 +28,7 @@ class ServerService:
             response.set_cookie('username', data['username'])
             response.set_cookie('SESSID', session_id)
             return 
-        return self.cs_rpc.login(username, password)
+        return self.cs_rpc.user_login(username, password)
 
     @http('POST','/register')
     def register(self, request):
@@ -37,14 +37,13 @@ class ServerService:
         email = data['email']
         username = data['username']
         password = sha256(data['password'].encode('utf-8')).hexdigest()
-        os.mkdir('Wherehouse/'+ username )
-        return self.cs_rpc.register(nama,email,username, password)
+        return self.cs_rpc.user_add(nama,email,username, password)
 
     @http("POST", "/upload")
     def save_file(self, request):
-
+        cookies = request.cookies
         data = request.get_json()
-        file_path = 'Wherehouse' + data['file_path']
+        file_path = 'Wherehouse/'+ data['file_path']+"/"
         log_response = {
             'status': '' , 
             'oke': False
@@ -56,7 +55,7 @@ class ServerService:
             os.makedirs(file_path)        
         for file in request.files.items():
             _, file_storage = file
-            file_storage.save(f"Wherehouse/{file_path}'s_Storage/{file_storage.filename}")
+            file_storage.save(f"Wherehouse/{cookies['username']}/{file_path}'s_Storage/{file_storage.filename}")
         return json_dump(log_response)
 
     @http("GET", "/<string:Filename>")

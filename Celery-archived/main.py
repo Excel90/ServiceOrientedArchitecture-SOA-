@@ -1,3 +1,4 @@
-import tasks
-
-print(tasks.add.delay(2, 3))
+import tasks 
+result = tasks.arrprime.delay(10)
+result.ready()    
+result.get(timeout=1)
