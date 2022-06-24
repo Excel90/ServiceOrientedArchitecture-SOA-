@@ -47,7 +47,7 @@ class Database(DependencyProvider):
                 host='127.0.0.1',
                 database='cloud_storage',
                 user='root',
-                password='admin'
+                password=''
             )
         except Error as e:
             print("Error while connecting to MySQL using Connection pool ", e)
