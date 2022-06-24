@@ -1,7 +1,4 @@
-import email
-import imp
 from nameko.rpc import rpc
-
 import Service.Dependencies as dependencies
 
 class CloudStorageService:

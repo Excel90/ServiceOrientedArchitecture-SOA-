@@ -1,4 +1,3 @@
-from unittest import result
 from nameko.extensions import DependencyProvider
 
 import mysql.connector
@@ -17,23 +16,24 @@ class DatabaseWrapper:
     def login(self, username, password):
         cursor = self.connection.cursor()
         cursor.execute("SELECT * FROM users WHERE username = %s AND password = %s", (username, password))
-        if cursor.rowcount == 1:
-            return True
+        result = cursor.fetchone()
+        if result != "":
+            return result
         else:
-            return False
+            return "Login Failed user not found"
     
     def register(self,name,email, username, password):
         cursor = self.connection.cursor()
-        if(self.login(username, password)):
-            return False
-        else:
-            cursor.execute("INSERT INTO users (name, email, username, password) VALUES (%s, %s, %s, %s)", (name, email, username, password))
+
+        try:
+            cursor.execute("INSERT INTO users (nama, email, username, password) VALUES (%s, %s, %s, %s)", (name, email, username, password))
             self.connection.commit()
-            os.mkdir('Wherehouse/'+ username )
-            return True
-    
-    def __del__(self):
-        self.connection.close()
+            os.makedirs(f"Storage/{username}")
+            return "Register Success"
+        except Error as e:
+            return e
+        finally:
+            return "User Already Exists"
 
 class Database(DependencyProvider):
 
