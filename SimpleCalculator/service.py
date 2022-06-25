@@ -1,5 +1,3 @@
-from ast import While
-from re import I
 from nameko.rpc import rpc
 import tasks
 
