@@ -43,7 +43,6 @@ class ServerService:
     def save_file(self, request):
         cookies = request.cookies
         file_path = 'Storage/'+ cookies['username'] + "/" + request.form['file_path']
-
         if cookies:
             log_response = {
                 'status': '' , 
