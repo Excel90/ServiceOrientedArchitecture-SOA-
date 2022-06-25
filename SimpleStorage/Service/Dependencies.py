@@ -1,3 +1,4 @@
+import re
 from nameko.extensions import DependencyProvider
 
 import mysql.connector
@@ -22,25 +23,39 @@ class DatabaseWrapper:
         if result != "":
             return result
         else:
+            
+            self.connection.close()
             return "Login Failed user not found"
     
+    def check_username(self, username):
+        cursor = self.connection.cursor()
+        cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
+        result = cursor.fetchone()
+        if result:
+            return True
+        else:
+            return False
+
     def register(self,name,email, username, password):
         cursor = self.connection.cursor()
-
-        try:
+        if self.check_username(username):
+            
+            self.connection.close()
+            return "Username already exists"
+        else:
             cursor.execute("INSERT INTO users (nama, email, username, password) VALUES (%s, %s, %s, %s)", (name, email, username, password))
             self.connection.commit()
+            os.makedirs(f"Storage/{username}")
             write_config = configparser.ConfigParser()
+            write_config.add_section('Folder_Owner')
+            write_config['Folder_Owner']['Name'] = username
             write_config.add_section('Shared_folder')
-            cfgfile = open(f"Storage/{username}/config.ini", 'w')
+            config_folder = os.path.join(f"Storage/{username}/config.ini")
+            cfgfile = open(config_folder, 'w')
             write_config.write(cfgfile)
             cfgfile.close()
-            os.makedirs(f"Storage/{username}")
             return "Register Success"
-        except Error as e:
-            return e
-        finally:
-            return "User Already Exists"
+        
 
 class Database(DependencyProvider):
 
