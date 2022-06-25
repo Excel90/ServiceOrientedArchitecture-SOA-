@@ -48,6 +48,17 @@ class GatewayService:
             return Response(json.dumps({'login': 'false'}), mimetype='application/json')
         
 
+    @http('POST', '/news/delete')
+    def edit_news(self, request):
+        cookies = request.cookies
+        if cookies:
+            data = request.get_json()
+            id = data['id']
+            return Response(json.dumps(self.news_rpc.deletenews(id)), mimetype='application/json')
+        else:
+            return Response(json.dumps({'status': 'Login first'}), mimetype='application/json')
+
+
     @http('POST', '/news/edit')
     def edit_news(self, request):
         cookies = request.cookies

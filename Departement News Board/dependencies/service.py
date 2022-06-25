@@ -35,3 +35,7 @@ class CalculationService:
     @rpc
     def updateattachment(self, attachment, id):
         return self.database.updatenewattachment(attachment, id)
+
+    @rpc
+    def deletenews(self, id):
+        return self.database.deletenews(id)

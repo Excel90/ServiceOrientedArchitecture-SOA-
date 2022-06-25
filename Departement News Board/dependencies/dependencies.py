@@ -107,6 +107,12 @@ class DatabaseWrapper:
         self.connection.commit()
         return {"Update": "Success"}
 
+    def deletenews(self, id):
+        cursor = self.connection.cursor()
+        cursor.execute("DELETE FROM news WHERE id = %s", (id,))
+        self.connection.commit()
+        return {"Delete": "Success"}
+
     def __del__(self):
         self.connection.close()
 
