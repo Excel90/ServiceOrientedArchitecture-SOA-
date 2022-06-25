@@ -5,6 +5,8 @@ from mysql.connector import Error
 from mysql.connector import pooling
 import os
 
+import configparser
+
 
 class DatabaseWrapper:
 
@@ -28,6 +30,11 @@ class DatabaseWrapper:
         try:
             cursor.execute("INSERT INTO users (nama, email, username, password) VALUES (%s, %s, %s, %s)", (name, email, username, password))
             self.connection.commit()
+            write_config = configparser.ConfigParser()
+            write_config.add_section('Shared_folder')
+            cfgfile = open(f"Storage/{username}/config.ini", 'w')
+            write_config.write(cfgfile)
+            cfgfile.close()
             os.makedirs(f"Storage/{username}")
             return "Register Success"
         except Error as e:

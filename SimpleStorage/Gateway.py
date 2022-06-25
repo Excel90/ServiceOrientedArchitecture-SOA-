@@ -1,10 +1,5 @@
-from fileinput import filename
 from hashlib import sha256
 import json
-from unittest import result
-from urllib import response
-from matplotlib.font_manager import json_dump, json_load
-import requests
 from werkzeug import Response
 from nameko.web.handlers import http
 import os
